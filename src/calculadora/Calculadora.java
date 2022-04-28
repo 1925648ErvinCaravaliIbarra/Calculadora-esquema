@@ -3,23 +3,26 @@ package calculadora;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.border.TitledBorder;
-
+import programa.Operaciones;
+import programa.Validaciones;
 
 
 public class Calculadora extends JFrame  {
    
    JPanel pflow,pflow2,pflow3;
    JLabel titulo1,titulo2,resultados;
-   JTextArea  numero1,numero2, resolucion;
+   JTextField   numero1,  numero2, resolucion;
    JButton sumar,restar,multiplicar,dividir;
    
     
@@ -27,8 +30,8 @@ public class Calculadora extends JFrame  {
     
     titulo1= new JLabel("Numero1");
     titulo2= new JLabel("Numero2");
-    numero1= new JTextArea(1,8);
-    numero2= new JTextArea(1,8);
+    numero1= new JTextField(8);
+    numero2= new JTextField(8);
     pflow = new JPanel();
     pflow.setBorder(BorderFactory.createTitledBorder(null, "Ingreso de datos",TitledBorder.DEFAULT_JUSTIFICATION,TitledBorder.DEFAULT_POSITION,new Font("Calibri",Font.PLAIN,20),Color.BLACK));
     pflow.add(titulo1);pflow.add(numero1);pflow.add(titulo2);pflow.add(numero2);
@@ -48,17 +51,58 @@ public class Calculadora extends JFrame  {
       
     
     resultados= new JLabel("Resultado");
-    resolucion= new JTextArea(1,8);
+    resolucion= new JTextField(8);
     pflow3 = new JPanel(); 
     pflow3.add(resultados);
     pflow3.add(resolucion);
     this.add(pflow3,BorderLayout.SOUTH);
     
     
+     ManejadoraEventos mEvento = new ManejadoraEventos();
+     sumar.addActionListener(mEvento);
+     restar.addActionListener(mEvento);
+     multiplicar.addActionListener(mEvento);
+     dividir.addActionListener(mEvento);
+        
+    
+    
     }
   
- 
-    
+    class ManejadoraEventos implements ActionListener {
+         Operaciones op;
+       public ManejadoraEventos()
+        {
+            op = new Operaciones();
+        }
+
+         double v1, v2;
+         
+        
+           
+        @Override
+        public void actionPerformed(ActionEvent ae) 
+        {
+         v1 = Validaciones.esDouble(numero1.getText());
+         v2 = Validaciones.esDouble(numero2.getText());
+         
+             if(ae.getSource() == sumar){
+              resolucion.setText(""+op.suma(v1, v2));
+             }
+             else if (ae.getSource() == restar){
+              resolucion.setText(""+op.resta(v1, v2));
+             }
+             
+             else if(ae.getSource() == multiplicar){
+              resolucion.setText(""+op.multiplicación(v1, v2));
+             }
+             
+             else if (ae.getSource() == dividir){
+              resolucion.setText(""+op.divicion(v1, v2));
+             }
+        }
+
+        
+    }
     public  Calculadora(){
     initGUI();
    
